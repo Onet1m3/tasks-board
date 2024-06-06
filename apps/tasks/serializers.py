@@ -46,3 +46,13 @@ class TaskSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         validated_data.update({"user": user})
         return super().create(validated_data)
+
+
+class ChangeTaskExecutor(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+
+    class Meta:
+        model = TaskCardModel
+        fields = [
+            "user_id"
+        ]

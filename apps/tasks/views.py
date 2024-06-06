@@ -8,7 +8,7 @@ from _core.utils.pagination import SimplePageNumberPagination
 from _core.utils.schemas.parametrs import TaskListRequestParametrsSchema
 from _core.utils.schemas.simple_response import SimpleResponseErrorSchemas
 from apps.tasks.models import TaskCardModel
-from apps.tasks.serializers import TaskCommentSerializer, TaskSerializer
+from apps.tasks.serializers import TaskCommentSerializer, TaskSerializer, ChangeTaskExecutor
 
 
 __all__ = (
@@ -95,3 +95,23 @@ class TasksModelViewSet(ModelViewSet):
             comment = comment_serializer.save()
             return Response(TaskCommentSerializer(comment).data, status=status.HTTP_201_CREATED)
         return Response({"success": False, "msg": f'{comment_serializer.error_messages}'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @extend_schema(
+        request = ChangeTaskExecutor,
+        responses={
+            200: TaskSerializer,
+            400: SimpleResponseErrorSchemas
+        },
+        description="change task executor",
+        tags=["Task management"]
+    )
+    @action(detail=True, methods=["post"])
+    def change_task_executor(self, request, pk):
+        task = self.get_object()
+        serializer = ChangeTaskExecutor(data=request.data)
+        if serializer.is_valid():
+            task.user_id = serializer.validated_data.get("user_id")
+            task.save()
+           
+            return Response(TaskSerializer(task).data, status=status.HTTP_200_OK)
+        return Response({"success": False, "msg": f'{serializer.error_messages}'}, status=status.HTTP_400_BAD_REQUEST)
