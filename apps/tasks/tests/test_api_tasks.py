@@ -14,16 +14,15 @@ class TasksModelViewSetTestCase(TestCase):
         self.task = TaskCardModel.objects.create(title='Test Task', description='Test Description')
 
     def test_get_queryset(self):
-        url = reverse('taskcardmodel-list')
-        self.client.force_authenticate(user=self.task.user)
+        url = reverse('tasks-list')
+        self.client.force_authenticate(user=self.user)
 
         response = self.client.get(url, {'ordering': 'desc'})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['created_at'], 'created_at')
 
     def test_create_task(self):
-        url = reverse('taskcardmodel-list')
+        url = reverse('tasks-list')
         self.client.force_authenticate(user=self.user)
         data = {"title": "New Task", "description": "New Description"}
 
@@ -34,16 +33,16 @@ class TasksModelViewSetTestCase(TestCase):
         self.assertEqual(response.data['description'], "New Description")
 
     def test_retrieve_task(self):
-        url = reverse('taskcardmodel-detail', args=[self.task.id])
-        self.client.force_authenticate(user=self.task.user)
+        url = reverse('tasks-detail', args=[self.task.id])
+        self.client.force_authenticate(user=self.user)
 
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_task(self):
-        url = reverse('taskcardmodel-detail', args=[self.task.id])
-        self.client.force_authenticate(user=self.task.user)
+        url = reverse('tasks-detail', args=[self.task.id])
+        self.client.force_authenticate(user=self.user)
         data = {"title": "Updated Task", "description": "Updated Description"}
 
         response = self.client.put(url, data)
@@ -53,7 +52,7 @@ class TasksModelViewSetTestCase(TestCase):
         self.assertEqual(response.data['description'], "Updated Description")
 
     def test_add_comment(self):
-        url = reverse('taskcardmodel-add-comment', args=[self.task.id])
+        url = reverse('tasks-add-comment', args=[self.task.id])
         self.client.force_authenticate(user=self.user)
         data = {"description": "New Comment"}
 
@@ -62,7 +61,7 @@ class TasksModelViewSetTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_change_task_executor(self):
-        url = reverse('taskcardmodel-change-task-executor', args=[self.task.id])
+        url = reverse('tasks-change-task-executor', args=[self.task.id])
         self.client.force_authenticate(user=self.user)
         data = {"user_id": 1}
 

@@ -18,4 +18,7 @@
   * Данные API `/api/v1/schema/swagger-ui/`
   * Для API используется drf
 
+## TESTS
+  * Запуск тестов `coverage run manage.py test --no-input`
+  * Вывести информацию `coverage report -m`
   
