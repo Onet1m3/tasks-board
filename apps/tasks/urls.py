@@ -1,5 +1,5 @@
 from django.urls import path, include
-from apps.tasks.views import TasksModelViewSet
+from apps.tasks.viewsets import TasksModelViewSet, UploadFileApiView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -7,5 +7,7 @@ router = DefaultRouter()
 router.register("tasks", TasksModelViewSet, basename='tasks')
 
 
-urlpatterns = []
+urlpatterns = [
+    path("tasks/upload-files/", UploadFileApiView.as_view())
+]
 urlpatterns += router.urls
